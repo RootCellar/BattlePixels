@@ -76,6 +76,7 @@ public class Level
     public void addTeam(Team t) {
         t.setLevel(this);
         teams.add(t);
+        t.setup();
     }
 
     public ArrayList<Mob> getInRange( int x, int y, int r) {

@@ -14,6 +14,10 @@ public class Team
         level.add(flag);
     }
     
+    public void setup() {
+        
+    }
+    
     public ArrayList<Mob> getMobsOnTeam() {
         ArrayList<Mob> mobs = new ArrayList<Mob>();
         for(int i=0; i<level.entities.size(); i++) {

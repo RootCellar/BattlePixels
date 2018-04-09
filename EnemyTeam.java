@@ -11,6 +11,17 @@ public class EnemyTeam extends Team
         g=0;
     }
     
+    public void setup() {
+        for(int i=0; i<8; i++) {
+            Cover c = new Cover();
+            c.team=this;
+            c.x=800;
+            c.y=430 + (i*20);
+            level.add(c);
+        }
+
+    }
+    
     public void tick() {
         
         flag.x = 800;

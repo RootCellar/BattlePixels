@@ -17,6 +17,7 @@ public class AllyTeam extends Team
         flag.radius = 200;
         
         time++;
+        
         if(getMobsOnTeam().size()<50) {
             Soldier m = new Soldier();
             m.x=0;
@@ -39,8 +40,9 @@ public class AllyTeam extends Team
                 s.ty = (int)( yTarget + ( ( Math.random() * spread * 2 ) - spread ) );
                 s.tx = (int)( xTarget + ( ( Math.random() * spread * 2 ) - spread ) );
             }
-            m.dir = 1;
-            m.shoot();
+            s.dir = 1;
+            s.shoot();
+            //s.grenade();
         }
     }
 }

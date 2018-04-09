@@ -41,6 +41,7 @@ public class Game implements Runnable, PixelCanvasUser
     int waitTime = 1;
     boolean spectate = false;
     boolean clearScreen = true;
+    RAMChecker ram = new RAMChecker();
     //public Mob[] mobs = new Mob[10000];
     //public ArrayList<Mob> mobs = new ArrayList<Mob>();
 
@@ -106,7 +107,7 @@ public class Game implements Runnable, PixelCanvasUser
 
         level.addTeam( p.team );
         level.addTeam( new EnemyTeam() );
-        
+
         //level.add( new Flag( 800, 500, 200, level.teams.get(1) ) );
 
         HeavyTank t = new HeavyTank();
@@ -117,6 +118,14 @@ public class Game implements Runnable, PixelCanvasUser
         t.ty = 500;
         t.dir = 1;
         level.add(t);
+
+        for(int i=0; i<6; i++) {
+            Cover c = new Cover();
+            c.team=p.team;
+            c.x=100;
+            c.y=450 + (i*20);
+            level.add(c);
+        }
 
         if(!spectate) level.add(p);
 
@@ -202,6 +211,8 @@ public class Game implements Runnable, PixelCanvasUser
             g.drawString("TPS: "+ticks, 100, 30);
             g.drawString("FPS: "+frames, 100, 40);
             g.drawString("RD: "+renderDistance, 100, 50);
+            g.drawString("RAM: "+ram.percentUsed+"%", 100, 60);
+            
         }
 
         if(paused) {
@@ -287,18 +298,21 @@ public class Game implements Runnable, PixelCanvasUser
         bar3.gc=255;
         bar3.rc=255;
         bar3.render(this);
+        
+        //drawLine(p.x, p.y, 500, 500, 255, 255, 255);
 
         screen.draw();
     }
 
     public void tick() {
+        ram.run();
 
         if(menu != null) {
             menu.tick();
             return;
         }
 
-        if(!screen.hasFocus()) paused = true;
+        //if(!screen.hasFocus()) paused = true;
 
         if(input.t.wasDown()) {
             paused=!paused;
@@ -329,6 +343,7 @@ public class Game implements Runnable, PixelCanvasUser
         //if(input.c.wasDown()) takeScreenshot();
         //if(input.u.wasDown() && renderDistance>=1000) renderDistance -= 50;
         //if(input.i.wasDown() && renderDistance<=2000) renderDistance += 50;
+        if(input.u.wasDown()) setMenu( new PauseMenu() );
         if(input.v.wasDown()) fps = 10000;
         if(input.y.wasDown()) fps = 100;
         if(input.z.wasDown()) clearScreen = !clearScreen;
@@ -376,7 +391,7 @@ public class Game implements Runnable, PixelCanvasUser
             Projectile e = level.projectiles.get(i);
             if( Level.getDistance(p.x, p.y, e.x, e.y) < renderDistance) e.render();
         }
-        
+
         for(int i=0; i<level.flags.size(); i++) {
             level.flags.get(i).render();
         }
@@ -397,19 +412,48 @@ public class Game implements Runnable, PixelCanvasUser
     public void drawPixel(int x, int y, int c) {
         screen.setPixel((x-xo)+xd, (y-yo)+yd, c);
     }
-    
+
     public void drawCircle(int x, int y, int r, int g, int b, int radius) {
         for(int i=0; i<=90; i++) {
+            
             double angle = ( (double) i ) / 1;
             double mult = Math.sin( Math.toRadians(angle) );
             int yAdd = (int)(mult * radius);
             mult = Math.cos( Math.toRadians(angle) );
             int xAdd = (int)(mult * radius);
-            
+
             drawPixel( x+xAdd, y+yAdd, r,g,b);
             drawPixel( x-xAdd, y+yAdd, r,g,b);
             drawPixel( x+xAdd, y-yAdd, r,g,b);
             drawPixel( x-xAdd, y-yAdd, r,g,b);
+        }
+    }
+    
+    public void drawSquare(int x1, int y1, int x2, int y2, int r, int g, int b) {
+        if(x1>x2 || y1>y2) return;
+        
+        for(int i=x1; i<=x2; i++) {
+            for(int k=y1; k<=y2; k++) {
+                drawPixel( i, k, r, g, b);
+            }
+        }
+    }
+    
+    public void drawLine(int x1, int y1, int x2, int y2, int r, int g, int b) {
+        boolean backwards = x1 > x2;
+        double y = 0;
+        
+        double slope;
+        if(y1!=y2) slope =(double)Math.abs(x1-x2) / (double)Math.abs(y1-y2);
+        else slope = 0;
+        
+        for(int i=0; i<=Math.abs(x1-x2);) {
+            y = i * slope;
+            y*=-1;
+            drawPixel( x1+i, y1+(int)y, r, g, b);
+            
+            if(backwards) i--;
+            else i++;
         }
     }
 }

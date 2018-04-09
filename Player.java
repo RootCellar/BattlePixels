@@ -115,7 +115,7 @@ public class Player extends Mob
             b.damage=20;
             b.setOffset(20);
             b.maxTime=100;
-            b.eRadius=100;
+            b.eRadius=1000;
             b.size = 5;
             shoot(b);
             reloadBig=0;

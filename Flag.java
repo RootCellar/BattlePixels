@@ -4,6 +4,7 @@ public class Flag extends Entity
     int radius = 50;
     int capturePoints = 0;
     PixelBar bar = new PixelBar();
+    boolean captured = false;
     
     public Flag(int xPos, int yPos, int r, Team t) {
         x=xPos;
@@ -30,7 +31,10 @@ public class Flag extends Entity
         bar.outOf=500;
         bar.calcPercent();
         
-        if(capturePoints>=500) capturePoints = 0;
+        if(capturePoints>=500) {
+            //capturePoints = 0;
+            captured = true;
+        }
     }
     
     public void render() {
