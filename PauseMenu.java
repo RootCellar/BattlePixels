@@ -11,6 +11,7 @@ public class PauseMenu extends Menu
     boolean firstTick = true;
     
     public PauseMenu() {
+        
     }
                         
     public void tick() {

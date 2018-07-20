@@ -4,9 +4,10 @@ public class Explosion extends Entity
     int range = 50;
     int current = 0;
     Mob shooter;
-    int damage=1;
+    double damage=1;
+    int speed = 3;
     Team t;
-    public Explosion(Mob s, int one, int two, int r, int d) {
+    public Explosion(Mob s, double one, double two, int r, double d) {
         x=one;
         y=two;
         range=r;
@@ -17,7 +18,7 @@ public class Explosion extends Entity
     
     public void tick() {
         ArrayList<Mob> toDamage = level.getInRange(x, y, current);
-        current++;
+        current+=speed;
         
         for(int i=0; i<toDamage.size(); i++) {
             Mob m = toDamage.get(i);

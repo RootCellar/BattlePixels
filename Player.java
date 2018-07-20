@@ -6,27 +6,37 @@ public class Player extends Mob
     int kills = 0;
     int energy = 0;
     int maxEnergy = 1000;
-    int maxShield = 1000;
-    int shield = 1000;
+    
+    double maxShield = 1000;
+    double shield = 1000;
 
     public Player() {
-        maxHp=2000;
-        hp=maxHp;
+        maxHp = 2000;
+        hp = maxHp;
         regen = 1;
         team = new Team();
-        speed=2;
+        speed = 2;
+        size = 30;
         shield = maxShield;
-        y=500;
+        y = 500;
+    }
+    
+    public void damage(double a, Projectile p, Mob m) {
+        super.damage(a, p, m);
+    }
+    
+    public void damage(double a, Mob m) {
+        super.damage(a, m);
+        
+        //m.damage(a, this); //Some kind of thorns effect
     }
 
-    public void damage(int a) {
-        //if(a<=100) return;
+    public void damage(double a) {
         shield -= a;
         if(shield<0) {
-            hp+=shield;
+            //hp+=shield;
             shield=0;
         }
-        //super.damage(a);
         damageTime = 400;
     }
 
@@ -47,6 +57,8 @@ public class Player extends Mob
                 game.drawPixel(x+i, y+k, 0, 0, 255);
             }
         }
+        
+        game.drawCircle(x, y, 255, 255, 255, size);
     }
 
     public void tick() {
@@ -94,6 +106,11 @@ public class Player extends Mob
         if(reloadSmall>=5) {
             for(int i=0; i<1; i++) {
                 Projectile p = newProjectile();
+                /*
+                Bomb p = new Bomb(this);
+                p.x = x;
+                p.y = y;
+                */
                 //p.velocX=10;
                 p.setByDir(1, 10);
                 p.damage=40;
@@ -115,7 +132,7 @@ public class Player extends Mob
             b.damage=20;
             b.setOffset(20);
             b.maxTime=100;
-            b.eRadius=1000;
+            b.eRadius=200;
             b.size = 5;
             shoot(b);
             reloadBig=0;

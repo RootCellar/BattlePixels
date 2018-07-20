@@ -2,8 +2,8 @@ public class Tank extends Mob
 {
     int reload = 100;
     int maxReload = 100;
-    int tx = x;
-    int ty = y;
+    double tx = x;
+    double ty = y;
     public Tank() {
         maxHp=3000;
         hp=maxHp;
@@ -18,9 +18,8 @@ public class Tank extends Mob
     public void tick() {
         super.tick();
         
-        bar.width = 30;
-        bar.height = 10;
-        bar.x = x - 15;
+        if( Math.abs(tx - x) < speed) x = tx;
+        if( Math.abs(ty - y) < speed) y = ty;
         
         if(tx>x) addX(speed);
         if(tx<x) subX(speed);
@@ -33,6 +32,11 @@ public class Tank extends Mob
         if(reload>=maxReload){
             shoot();
         }
+        
+        bar.width = 30;
+        bar.height = 10;
+        bar.x = x - 15;
+        bar.y = y + 10;
     }
     
     public void shoot() {

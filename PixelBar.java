@@ -5,8 +5,10 @@ public class PixelBar
     double has=0;
     int width = 30;
     int height = 10;
-    int x = -100;
-    int y = -100;
+    
+    double x = -100;
+    double y = -100;
+    
     int rc = 0;
     int gc = 255;
     int bc = 0;

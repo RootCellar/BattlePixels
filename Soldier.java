@@ -1,7 +1,7 @@
 public class Soldier extends Mob
 {
-    int tx = 0;
-    int ty = 500;
+    double tx = 0;
+    double ty = 500;
     int reload = 0;
     int grenadeTime = 0;
     
@@ -11,13 +11,17 @@ public class Soldier extends Mob
 
     public void tick() {
         super.tick();
+        
         if(tx>x) addX(speed);
         if(tx<x) subX(speed);
         if(ty>y) addY(speed);
         if(ty<y) subY(speed);
+        
+        doLifeBar();
 
         reload++;
         grenadeTime++;
+        
         if(reload>=100) reload = 100;
         if(grenadeTime >= 1000) grenadeTime = 100;
     }

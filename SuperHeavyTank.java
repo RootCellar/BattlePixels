@@ -5,7 +5,7 @@ public class SuperHeavyTank extends Tank
         maxReload = 200;
         maxHp = 15000;
         hp = maxHp;
-        speed = 1;
+        speed = 0.5;
         regen = 10;
         dir = 1;
     }

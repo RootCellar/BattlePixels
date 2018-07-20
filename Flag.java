@@ -44,7 +44,7 @@ public class Flag extends Entity
         game.drawPixel(x, y-radius, team.r, team.g, team.b);
         game.drawPixel(x, y+radius, team.r, team.g, team.b);
         */
-        game.drawCircle( x, y, team.r, team.g, team.b, radius);
+        game.drawCircle(x, y, team.r, team.g, team.b, radius);
        
         game.drawPixel(x, y, team.r, team.g, team.b);
         

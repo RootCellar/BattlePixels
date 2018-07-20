@@ -26,19 +26,26 @@ public class EnemySoldier extends Mob
 
     public void tick() {
         super.tick();
-        regen();
-        checkHp();
+        
+        //regen();
+        //checkHp();
+        
         if(gotime>0) {
+            
             if(xt>0) addX(speed);
             if(yt>0) addY(speed);
             if(xt<0) subX(speed);
             if(yt<0) subY(speed);
+            
             gotime--;
         }
+        
         if(gotime==0) waittime--;
         if(gotime==0 && waittime==0) findDir();
         if(waittime==0) waittime=(int)Math.round( Math.random()*200 );
+        
         reload--;
+        
         if(reload<=0) {
             shoot();
         }

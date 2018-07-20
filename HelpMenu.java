@@ -2,6 +2,7 @@ import java.awt.*;
 public class HelpMenu extends Menu
 {
     public HelpMenu() {
+        
     }
     
     public void tick() {

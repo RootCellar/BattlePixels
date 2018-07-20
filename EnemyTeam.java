@@ -4,6 +4,7 @@ public class EnemyTeam extends Team
     int soldierCount = 0;
     int heavyTankCount = 0;
     int tankCount = 0;
+    int bossCount = 0;
     
     public EnemyTeam() {
         r=255;
@@ -31,6 +32,7 @@ public class EnemyTeam extends Team
         soldierCount = 0;
         heavyTankCount = 0;
         tankCount = 0;
+        bossCount = 0;
         
         ArrayList<Mob> mobs = getMobsOnTeam();
         for(int i=0; i<mobs.size(); i++) {
@@ -38,6 +40,15 @@ public class EnemyTeam extends Team
             if(m instanceof EnemySoldier) soldierCount++;
             if(m instanceof SuperHeavyTank) heavyTankCount++;
             if(m instanceof HeavyTank) tankCount++;
+            if(m instanceof Boss) bossCount++;
+        }
+        
+        if(bossCount<1) {
+            Boss b = new Boss();
+            b.team = this;
+            b.x = 1000;
+            b.y = 500;
+            level.add(b);
         }
         
         if(soldierCount<50) {

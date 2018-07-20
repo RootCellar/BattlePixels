@@ -1,0 +1,4 @@
+BattlePixels v0.1
+-----------------
+
+-Change game from integers to doubles

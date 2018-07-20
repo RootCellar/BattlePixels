@@ -2,8 +2,9 @@ import java.util.ArrayList;
 public class Entity
 {
     public static Game game;
-    int x;
-    int y;
+    double x;
+    double y;
+    double size = 0;
     Level level;
     Team team;
     

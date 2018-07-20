@@ -3,12 +3,35 @@ public class AllyTeam extends Team
 {
     int xTarget = 500;
     int yTarget = 500;
-    int spread = 50;
+    int spread = 100;
     int time = 0;
     public AllyTeam() {
         b=255;
         r=0;
         g=0;
+    }
+    
+    public void setup() {
+        /*
+        for(int i=0; i<6; i++) {
+            Cover c = new Cover();
+            c.team=this;
+            c.x=100;
+            c.y=450 + (i*20);
+            level.add(c);
+        }
+        */
+       
+       flag.x = 200;
+       flag.y = 500;
+       flag.radius = 200;
+       
+       Cover c = new Cover();
+       c.team = this;
+       c.x = flag.x;
+       c.y = flag.y;
+       c.size = 100;
+       level.add(c);
     }
     
     public void tick() {
@@ -18,7 +41,7 @@ public class AllyTeam extends Team
         
         time++;
         
-        if(getMobsOnTeam().size()<50) {
+        if(getMobsOnTeam().size()<100) {
             Soldier m = new Soldier();
             m.x=0;
             m.y=500;
@@ -27,7 +50,7 @@ public class AllyTeam extends Team
         }
         
         if(time>=500) {
-            yTarget = 100+(int)(Math.random()*800);
+            yTarget = 200+(int)(Math.random()*600);
             time=0;
         }
         
