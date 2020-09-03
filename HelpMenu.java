@@ -1,12 +1,13 @@
 import java.awt.*;
 public class HelpMenu extends Menu
 {
-    public HelpMenu() {
-        
+    Menu previous;
+    public HelpMenu(Menu m) {
+        previous = m;
     }
     
     public void tick() {
-        if(game.input.space.wasDown()) game.setMenu( new StartMenu() );
+        if(game.input.space.wasDown()) game.setMenu( previous );
     }
     
     public void draw(Graphics g) {
@@ -14,9 +15,9 @@ public class HelpMenu extends Menu
         g.drawString("Space to exit this help menu", 50, 10);
         g.drawString("T to pause the game", 50, 30);
         g.drawString("Use W, A, S, D to move", 50, 50);
-        g.drawString("Use space to fire the machine gun", 50, 70);
-        g.drawString("Use K to fire the shotgun", 50, 90);
-        g.drawString("Use L to fire the bomb", 50, 110);
+        g.drawString("Use space to fire the main gun of your class", 50, 70);
+        g.drawString("Each class has it's own specific abilities,", 50, 90);
+        g.drawString("and their descriptions will include their controls", 50, 110);
         
     }
 }

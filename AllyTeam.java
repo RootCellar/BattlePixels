@@ -25,6 +25,7 @@ public class AllyTeam extends Team
        flag.x = 200;
        flag.y = 500;
        flag.radius = 200;
+       //flag.visible = false;
        
        Cover c = new Cover();
        c.team = this;

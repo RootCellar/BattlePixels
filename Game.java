@@ -4,40 +4,39 @@ import java.awt.*;
 import java.io.*;
 import java.awt.image.*;
 import javax.imageio.*;
+
 public class Game implements Runnable, PixelCanvasUser
 {
     public PixelCanvas screen = new PixelCanvas();
     public InputListener input = new InputListener(this);
     Renderer renderer = new Renderer(this);
-    //public int x = 0;
-    //public int y = 0;
-    public Player p = new Player();
+    
+    public Player p;
     public int xd = screen.WIDTH/2;
     public int yd = screen.HEIGHT/2;
     public int xo = 0;
     public int yo = 0;
-    public Socket server;
-    public boolean going=false;
+    public boolean going = false;
+    public boolean setup = false;
 
     public Menu menu;
 
     public Level level = new Level();
 
-    public Level[] levels = new Level[1]; // Multi-Level Support Test
+    public Level[] levels = new Level[1]; // Multi-Level Support
     int currentLevel = 0;
 
     public PixelBar bar = new PixelBar();
     public PixelBar bar2 = new PixelBar();
-    public PixelBar bar3 = new PixelBar();
 
     long start = System.nanoTime();
-    int renderDistance = 1500;
+    int renderDistance = 1000;
     boolean paused = false;
     boolean lifeBars = true;
     boolean debug = false;
-    
-    boolean MULTI_RENDERING = false; //Set to true to enable multi-threaded rendering. WIP, glitchy
-    
+
+    boolean MULTI_RENDERING = false; //Set to true to enable multi-threaded rendering. WIP, causes jittering
+
     int ticks = 0;
     int frames = 0;
     int tps = 50;
@@ -49,6 +48,10 @@ public class Game implements Runnable, PixelCanvasUser
     boolean spectate = false;
     boolean clearScreen = true;
     boolean ticking = false;
+
+    boolean RENDER_WHEN_NEEDED = false;
+    double ZOOM = 1;
+
     RAMChecker ram = new RAMChecker();
     //public Mob[] mobs = new Mob[10000];
     //public ArrayList<Mob> mobs = new ArrayList<Mob>();
@@ -85,10 +88,6 @@ public class Game implements Runnable, PixelCanvasUser
         //screen.setSize(800);
     }
 
-    public void setServer(Socket s) {
-        server=s;
-    }
-
     public void start() {
         if(!going) {
             going=true;
@@ -105,10 +104,10 @@ public class Game implements Runnable, PixelCanvasUser
     public void setup() {
         level = new Level();
 
-        p = new Player();
+        if(p == null) p = new Player( input );
 
-        screen.user=this;
-        Entity.game=this;
+        screen.user = this;
+        Entity.game = this;
 
         p.setLevel(level);
         p.team = new AllyTeam();
@@ -136,7 +135,8 @@ public class Game implements Runnable, PixelCanvasUser
             levels[i].addTeam( new EnemyTeam() );
 
         }
-        //level.add( new Tank() );
+
+        setup = true;
     }
 
     public synchronized void run() {
@@ -147,8 +147,10 @@ public class Game implements Runnable, PixelCanvasUser
         long lastFrame = System.nanoTime();
         long checkTime = System.nanoTime();
         ticking = false;
-        setup();
-        
+        screen.user=this;
+        Entity.game=this;
+        //setup();
+
         if(MULTI_RENDERING) renderer.start();
         while(going) {
             try{
@@ -157,22 +159,35 @@ public class Game implements Runnable, PixelCanvasUser
 
                 waitTime = 1;
                 if(fps>100 && !MULTI_RENDERING) waitTime = 0;
-                
+
                 long now = System.nanoTime();
                 unprocessed += (now-last) / nsPerTick;
                 last=now;
 
                 renderer.canRender(false);
+
+                boolean ticked = false;
+
                 while(unprocessed>=1) {
                     tick();
                     ticks2++;
                     unprocessed-=1;
+                    ticked = true;
                 }
                 renderer.canRender(true);
                 //render();
 
                 ///*
-                if( !MULTI_RENDERING && ( ( System.nanoTime() - lastFrame ) >= nsPerFrame  ) ) {
+                if(RENDER_WHEN_NEEDED) {
+                    
+                    if(ticked) {
+                        lastFrame = System.nanoTime();
+                        render();
+                        frames2++;
+                    }
+                    
+                }
+                else if(( ( System.nanoTime() - lastFrame ) >= nsPerFrame  ) ) {
                     lastFrame = System.nanoTime();
                     render();
                     frames2++;
@@ -213,23 +228,23 @@ public class Game implements Runnable, PixelCanvasUser
             g.drawString("Y: "+p.y, 10,40);
             //g.drawString("E+P: "+(level.entities.size()+level.projectiles.size()), 10, 50);
             g.drawString("T:"+((System.nanoTime()-start)/1000000000), 10,60); 
-            g.drawString("HP: "+p.hp+"/"+p.maxHp, 10, 70);
+            g.drawString("HP: " + Math.round(p.hp) + "/" + p.maxHp, 10, 70);
             g.drawString("KILLS: " + p.kills, 10, 80);
             g.drawString("DIR: " + p.dir, 10, 90);
-            
+
             g.drawString("E+P: "+(level.entities.size()+level.projectiles.size()), 10, 110);
             g.drawString("E: "+level.entities.size(), 10, 120);
             g.drawString("P: "+level.projectiles.size(), 10, 130);
             g.drawString("T: "+level.teams.size(), 10, 140);
             g.drawString("F: "+level.flags.size(), 10, 150);
-            
+
             g.drawString("TPS: "+ticks, 150, 30);
             g.drawString("FPS: "+frames, 150, 40);
             g.drawString("RD: "+renderDistance, 150, 50);
             //g.drawString("RAM: "+ram.percentUsed+"%", 100, 60);
             g.drawString("LEVEL: "+currentLevel, 150, 70);
             g.drawString("PFPS: "+pfps, 150, 80);
-            
+
             //LEVEL DATA
             g.drawString("LEVEL TICK: "+level.levelTickingTime, 250, 30);
             g.drawString("ENTITY TICK: "+level.entityTickingTime, 250, 40);
@@ -248,7 +263,7 @@ public class Game implements Runnable, PixelCanvasUser
     public void render() {
 
         long start = System.nanoTime();
-        
+
         if(menu != null) {
             screen.draw();
             screen.clear();
@@ -257,8 +272,16 @@ public class Game implements Runnable, PixelCanvasUser
 
         xd = screen.WIDTH/2;
         yd = screen.HEIGHT/2;
-        xo=(int)Math.round(p.x);
-        yo=(int)Math.round(p.y);
+
+        if(p !=null) {
+            xo=(int)Math.round(p.dx);
+            yo=(int)Math.round(p.dy);
+        }
+        else {
+            xo = 0;
+            yo = 0;
+        }
+
         if(clearScreen) screen.clear();
 
         //screen.setPixel(xd,yd,255,255,255);
@@ -292,8 +315,8 @@ public class Game implements Runnable, PixelCanvasUser
 
         renderEntities();
 
-        bar.x = p.x - 120;
-        bar.y = ( p.y + ( screen.HEIGHT / 2 ) ) - 60;
+        bar.x = xo - 120;
+        bar.y = ( yo + ( screen.HEIGHT / 2 ) ) - 60;
         bar.width=240;
         bar.height=20;
         //bar.percent = ((p.hp*100)/p.maxHp);
@@ -302,50 +325,44 @@ public class Game implements Runnable, PixelCanvasUser
         bar.calcPercent();
         bar.render(this);
 
+        bar2.x = p.x - 1000;
+        bar2.y = p.y - 1000;
+
+        /**
         bar2.x = p.x - 120;
-        bar2.y = ( p.y + ( screen.HEIGHT / 2 ) ) - 30;
+        bar2.y = ( p.y + ( screen.HEIGHT / 2 ) ) - 90;
         bar2.width=240;
         bar2.height=20;
-        bar2.has = p.energy;
-        bar2.outOf = p.maxEnergy;
+        bar2.has = p.shield;
+        bar2.outOf = p.maxShield;
         bar2.calcPercent();
-        bar2.gc=0;
-        bar2.bc=255;
+        bar2.gc=255;
+        bar2.rc=255;
         bar2.render(this);
+         */
 
-        bar3.x = p.x - 120;
-        bar3.y = ( p.y + ( screen.HEIGHT / 2 ) ) - 90;
-        bar3.width=240;
-        bar3.height=20;
-        bar3.has = p.shield;
-        bar3.outOf = p.maxShield;
-        bar3.calcPercent();
-        bar3.gc=255;
-        bar3.rc=255;
-        bar3.render(this);
-        
         drawLine(p.x, p.y, 500, 500, 0, 255, 0, 100);
         drawLine(p.x, p.y, 0, 500, 0, 0, 255, 100);
         drawLine(p.x, p.y, 1000, 500, 255, 0, 0, 100);
 
         screen.draw();
-        
+
         long end = System.nanoTime();
-        
+
         long toDraw = end - start;
-        
+
         pfps = (int) (1000000000 / toDraw);
         /**
-        
+
         if(toDraw > 15000000) {
-            renderDistance--;
+        renderDistance--;
         }
         else {
-            renderDistance++;
+        renderDistance++;
         }
-        
+
         */
-        
+
         if(renderDistance<200) renderDistance = 200;
     }
 
@@ -365,27 +382,39 @@ public class Game implements Runnable, PixelCanvasUser
 
         if(paused) return;
 
-        if( menu == null) tickGame();
+        if( menu == null ) tickGame();
     }
 
     public void tickGame() {
 
+        /**
+         * Player controls
+         * Now done in player class
+         * Allows for specific classes
         if(p.isAlive) {
 
-            if(input.down.down) p.addY( p.speed );
-            if(input.up.down) p.subY( p.speed );
-            if(input.left.down) p.subX( p.speed );
-            if(input.right.down) p.addX( p.speed );
-            if(input.space.down) p.shootSmall();
-            if(input.l.down) p.shootBig();
-            if(input.k.down) p.shootShotgun();
+        if(input.down.down) p.addY( p.speed );
+        if(input.up.down) p.subY( p.speed );
+        if(input.left.down) p.subX( p.speed );
+        if(input.right.down) p.addX( p.speed );
+        if(input.space.down) p.shootSmall();
+        if(input.l.down) p.shootBig();
+        if(input.k.down) p.shootShotgun();
 
         }
+        */
 
         if(input.p.wasDown()) debug = !debug;
 
+        if(input.x.wasDown()) ZOOM /= 2;
+        if(input.b.wasDown()) ZOOM *= 2;
+        
+        if(ZOOM < 0.125) ZOOM = 0.125;
+        if(ZOOM > 8) ZOOM = 8;
+        
         ///**
         //if(input.c.wasDown()) takeScreenshot();
+        if(input.c.wasDown()) RENDER_WHEN_NEEDED = !RENDER_WHEN_NEEDED;
         //if(input.u.wasDown() && renderDistance>=1000) renderDistance -= 50;
         //if(input.i.wasDown() && renderDistance<=2000) renderDistance += 50;
         if(input.u.wasDown()) setMenu( new PauseMenu() );
@@ -423,7 +452,7 @@ public class Game implements Runnable, PixelCanvasUser
     public void renderEntities() {
         for(int i=0; i<level.entities.size(); i++) {
             Entity e = level.entities.get(i);
-            if( Level.getDistance(p.x, p.y, e.x, e.y) < renderDistance ) {
+            if( Level.getDistance(p.x, p.y, e.x, e.y) < ( renderDistance * ZOOM ) ) {
                 e.render();
                 if(e instanceof Mob) {
                     Mob m = (Mob)e;
@@ -434,7 +463,7 @@ public class Game implements Runnable, PixelCanvasUser
 
         for(int i=0; i<level.projectiles.size(); i++) {
             Projectile e = level.projectiles.get(i);
-            if( Level.getDistance(p.x, p.y, e.x, e.y) < renderDistance) e.render();
+            if( Level.getDistance(p.x, p.y, e.x, e.y) < ( renderDistance * ZOOM ) ) e.render();
         }
 
         for(int i=0; i<level.flags.size(); i++) {
@@ -449,7 +478,7 @@ public class Game implements Runnable, PixelCanvasUser
     public int getYOffset() {
         return yd-yo;
     }
-    
+
     public void drawPixel(double x, double y, int r, int g, int b) {
         drawPixel( (int)Math.round(x), (int)Math.round(y), r, g, b);
         //screen.setPixel((x-xo)+xd, (y-yo)+yd, r, g, b);
@@ -457,21 +486,31 @@ public class Game implements Runnable, PixelCanvasUser
     }
 
     public void drawPixel(int x, int y, int r, int g, int b) {
-        screen.setPixel((x-xo)+xd, (y-yo)+yd, r, g, b);
-        //if( Level.getDistance(xo, yo, x, y) < renderDistance) screen.setPixel((x-xo)+xd, (y-yo)+yd, r, g, b);
-    }
+        //Regular Render
+        //screen.setPixel(( x -  ( xo ) ) + xd, ( y - ( yo ) ) + yd, r, g, b);
+        x/=ZOOM;
+        y/=ZOOM;
+        
+        x -= xo / ZOOM;
+        y -= yo / ZOOM;
+        
+        x+= xd;
+        y+= yd;
+        
+        screen.setPixel(x, y, r, g, b);
 
-    public void drawPixel(int x, int y, int c) {
-        screen.setPixel((x-xo)+xd, (y-yo)+yd, c);
+        //TEST RENDER
+        //screen.setPixel(( (y) - yo)+xd, ( (x * -1) - xo)+yd, r, g, b);
+        //if( Level.getDistance(xo, yo, x, y) < renderDistance) screen.setPixel((x-xo)+xd, (y-yo)+yd, r, g, b);
     }
 
     public void drawCircle(double x2, double y2, int r, int g, int b, double radius2) {
         int x = (int)Math.round(x2);
         int y = (int)Math.round(y2);
         int radius = (int)Math.round(radius2);
-        
+
         for(int i=0; i<=90; i+=1) {
-            
+
             double angle = ( (double) i ) / 1;
             double mult = Math.sin( Math.toRadians(angle) );
             int yAdd = (int)(mult * radius);
@@ -484,38 +523,38 @@ public class Game implements Runnable, PixelCanvasUser
             drawPixel( x-xAdd, y-yAdd, r,g,b);
         }
     }
-    
+
     public void drawSquare(int x1, int y1, int x2, int y2, int r, int g, int b) {
         if(x1>x2 || y1>y2) return;
-        
+
         for(int i=x1; i<=x2; i++) {
             for(int k=y1; k<=y2; k++) {
                 drawPixel( i, k, r, g, b);
             }
         }
     }
-    
+
     public void drawLine(double x1, double y1, double x2, double y2, int r, int g, int b, int count, int size) {
         //boolean backwards = x1 > x2;
-        x1*=-1;
-        y1*=-1;
-        x2*=-1;
-        y2*=-1;
-        
+        x1 *= -1;
+        y1 *= -1;
+        x2 *= -1;
+        y2 *= -1;
+
         double y = 0;
-        
+
         double slope;
         //if(y1!=y2) slope =(double)Math.abs(x1-x2) / (double)Math.abs(y1-y2);
-        if(y1!=y2) slope =(double)Math.abs(y1-y2) / (double)Math.abs(x1-x2);
+        if(y1!=y2) slope = (double)Math.abs(y1-y2) / (double)Math.abs(x1-x2);
         else slope = 0;
-        
+
         if(y1>y2) slope *=-1;
-        
+
         double difference = Math.abs(x1 - x2);
-        
+
         double begin;
         double end;
-        
+
         if(difference<0) {
             begin = difference;
             end = 0;
@@ -524,27 +563,26 @@ public class Game implements Runnable, PixelCanvasUser
             begin = 0;
             end = difference;
         }
-        
+
         double toAdd = end - begin;
-        
+
         if(count<1) count = (int) Math.round( Level.getDistance( x1, y1, x2, y2) );
-        
-        toAdd/=(double)count;
-        
-        
+
+        toAdd /= (double)count;
+
         for(double i = begin; i<end; i+=toAdd) {
             y = i * slope;
-            y*=-1;
-            
+            y *= -1;
+
             if(x1>x2) drawPixel( (x1*-1)+i, (y1*-1)+y, r, g, b);
             else drawPixel( (x1*-1)-i, (y1*-1)+y, r, g, b);
         }
     }
-    
+
     public void drawLine(double x1, double y1, double x2, double y2, int r, int g, int b) {
         drawLine(x1, y1, x2, y2, r, g, b, 100, 1);
     }
-    
+
     public void drawLine(double x1, double y1, double x2, double y2, int r, int g, int b, int count) {
         drawLine(x1, y1, x2, y2, r, g, b, count, 1);
     }

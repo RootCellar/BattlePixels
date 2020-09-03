@@ -98,7 +98,7 @@ public class PixelCanvas extends Canvas implements Runnable
 
         bs = getBufferStrategy();
         if (bs == null) {
-            createBufferStrategy(3);
+            createBufferStrategy(2);
             requestFocus();
             return;
         }
@@ -152,25 +152,36 @@ public class PixelCanvas extends Canvas implements Runnable
 
         }
     }
-
+    
+    //Test Method, possibly faster
+    ///*
+    public static int getColor(int r, int g, int b) {
+        //int r2=r<<16;
+        //int g2=g<<8;
+        //int b2=b;
+        
+        try{
+            return (r << 16)+(g << 8)+(b);
+        }catch(Exception e) {
+            return 0;
+        }
+    }
+    //*/
+    
+    /* Original Method
+     * May be slower
     public static int getColor(int r, int g, int b) {
         int r2=r<<16;
         int g2=g<<8;
         int b2=b;
 
-        /*
-        System.out.println(r2+"\n");
-        System.out.println(g2+"\n");
-        System.out.println(b2+"\n");
-         */
-
-        //System.out.println((r2+g2+b2)+"\n");
         try{
             return r2+g2+b2;
         }catch(Exception e) {
             return 0;
         }
     }
+    */
 
     public void randomize() {
         for(int y=0; y< HEIGHT; y++) {

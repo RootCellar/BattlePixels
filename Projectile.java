@@ -58,12 +58,12 @@ public class Projectile extends Entity
     
     public void hitInRange() {
         ArrayList<Mob> entities = level.getInRange( x, y, damageRange);
-        ///**
+
         for(int i=0; i<entities.size(); i++) {
             Mob m = entities.get(i);
             if(!team.equals(m.team)) hit(m);
         }
-        //*/
+
     }
 
     public void render() {

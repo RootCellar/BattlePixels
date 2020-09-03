@@ -8,6 +8,8 @@ public class Entity
     Level level;
     Team team;
     
+    boolean visible = true;
+    
     public void remove() {
         level.remove(this);
     }
@@ -21,6 +23,8 @@ public class Entity
     }   
     
     public void render() {
+        if(!visible) return;
+        
         game.drawPixel(x, y, 128, 128, 128);
     }
 }

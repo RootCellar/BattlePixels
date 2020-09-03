@@ -62,7 +62,8 @@ public class Level
         
         /**
          * Bug fix
-         * 
+         * Stops mobs and projectiles from being skipped
+         * while ticking the level
          */
         while(pendingMobSpawns.size()>0) {
             entities.add( pendingMobSpawns.remove(0) );
@@ -123,7 +124,8 @@ public class Level
         
         /**
          * Bug Fix
-         * 
+         * Stops mobs and projectiles from being skipped
+         * while ticking the level
          */
         while(pendingMobDespawns.size()>0) {
             entities.remove( pendingMobDespawns.remove(0) );
@@ -149,7 +151,6 @@ public class Level
     }
 
     public void add(Projectile p) {
-        //projectiles.add(p);
         pendingProjectileSpawns.add(p);
         p.setLevel(this);
     }

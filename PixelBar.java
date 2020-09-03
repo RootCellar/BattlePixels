@@ -12,13 +12,17 @@ public class PixelBar
     int rc = 0;
     int gc = 255;
     int bc = 0;
+    
+    int roc = 255;
+    int goc = 0;
+    int boc = 0;
     public void render(Game g) {
-        double howMuch = (percent/100) * ((double)width);
+        double howMuch = ( percent / 100.0 ) * ((double)width);
         int howMuch2 = (int)howMuch;
         for(int i=0; i<width; i++) {
             for(int k=0; k<height; k++) {
                 //if(i>howMuch2) g.drawPixel(x+i, y+k, 255-rc, 255-gc, 255-bc);
-                if(i>howMuch2) g.drawPixel(x+i, y+k, 255, 0, 0);
+                if(i>howMuch2) g.drawPixel(x+i, y+k, roc, goc, boc);
                 else g.drawPixel(x+i, y+k, rc, gc, bc);
             }
         }
@@ -26,9 +30,9 @@ public class PixelBar
     
     public void calcPercent() {
         try{  
-            percent = ( has / outOf ) * 100;
+            percent = ( has / outOf ) * 100.0;
         }catch(Exception e) {
-            
+            percent = 100.0;
         }
     }
 }

@@ -45,6 +45,7 @@ public class EnemyTeam extends Team
         
         if(bossCount<1) {
             Boss b = new Boss();
+            b.doAi = true;
             b.team = this;
             b.x = 1000;
             b.y = 500;

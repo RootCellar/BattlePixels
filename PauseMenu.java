@@ -4,8 +4,10 @@ public class PauseMenu extends Menu
     int choice = 0;
     
     String[] choices = {"Resume",
-                        "Start Over",
-                        //"About"
+                        "About",
+                        "Help",
+                        "Quit",
+                        "OPTIONS"
                         };
                         
     boolean firstTick = true;
@@ -22,12 +24,30 @@ public class PauseMenu extends Menu
         }
         
         if(game.input.space.wasDown()) {
-            
+        
             if(choice == 0) game.clearMenu();
             
+            /**
             if(choice == 1) {
                 game.setup();
                 game.clearMenu();
+            }
+            */
+           
+            if(choice == 1) {
+                game.setMenu( new AboutMenu( this ) );
+            }
+            
+            if(choice == 2) {
+                game.setMenu( new HelpMenu( this ) );
+            }
+            
+            if(choice == 3) {
+                game.setMenu( new StartMenu() );
+            }
+            
+            if(choice == 4) {
+                game.setMenu( new OptionMenu( this ) );
             }
             
             //if(choice == 2) game.setMenu( new AboutMenu() );

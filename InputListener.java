@@ -26,6 +26,11 @@ public class InputListener implements KeyListener
     }
 
     public ArrayList<Key> keys = new ArrayList<Key>();
+    
+    Key aup = new Key();
+    Key adown = new Key();
+    Key aleft = new Key();
+    Key aright = new Key();
 
     Key up = new Key();
     Key down = new Key();
@@ -76,6 +81,11 @@ public class InputListener implements KeyListener
         if(ke.getKeyCode() == KeyEvent.VK_B) b.toggle(pressed);
         if(ke.getKeyCode() == KeyEvent.VK_N) n.toggle(pressed);
         if(ke.getKeyCode() == KeyEvent.VK_M) m.toggle(pressed);
+        
+        if(ke.getKeyCode() == KeyEvent.VK_RIGHT) aright.toggle(pressed);
+        if(ke.getKeyCode() == KeyEvent.VK_LEFT) aleft.toggle(pressed);
+        if(ke.getKeyCode() == KeyEvent.VK_DOWN) adown.toggle(pressed);
+        if(ke.getKeyCode() == KeyEvent.VK_UP) aup.toggle(pressed);
     }
 
     public void keyPressed(KeyEvent ke) {

@@ -5,7 +5,8 @@ public class StartMenu extends Menu
     
     String[] choices = {"Start the Game",
                         "How to play",
-                        "About"
+                        "About",
+                        "OPTIONS"
                         };
     
     public StartMenu() {
@@ -15,9 +16,11 @@ public class StartMenu extends Menu
     public void tick() {
         if(game.input.space.wasDown()) {
             
-            if(choice == 0) game.clearMenu();
-            if(choice == 1) game.setMenu( new HelpMenu() );
-            if(choice == 2) game.setMenu( new AboutMenu() );
+            //if(choice == 0) game.clearMenu();
+            if(choice == 0) game.setMenu( new ClassMenu() );
+            if(choice == 1) game.setMenu( new HelpMenu( this ) );
+            if(choice == 2) game.setMenu( new AboutMenu( this ) );
+            if(choice == 3) game.setMenu( new OptionMenu( this ) );
         }
         
         if(game.input.down.wasDown()) choice++;
@@ -32,7 +35,7 @@ public class StartMenu extends Menu
         g.setColor(Color.RED);
         g.drawString("Hello!", 50, 50);
         g.drawString("Welcome to the Game", 50, 65);
-        g.drawString("(W = Up, S = Down)", 50, 80);
+        g.drawString("(W = Up, S = Down, Space = Select)", 50, 80);
         
         for(int i=0; i<choices.length; i++) {
             if( i == choice) g.drawString("> "+choices[i], 50, (i*20)+100);

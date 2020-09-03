@@ -1,13 +1,13 @@
-public class Soldier extends Mob
+public class Drone extends Mob
 {
     double tx = 0;
     double ty = 500;
-    
     int reload = 0;
     int grenadeTime = 0;
-    int reloadNeed = 50;
     
-    PixelBar pb = new PixelBar();
+    public Drone() {
+        speed = 1;
+    }
     
     public boolean isAtSpot() {
         return (x==tx) && (y==ty);
@@ -21,36 +21,23 @@ public class Soldier extends Mob
         if(ty>y) addY(speed);
         if(ty<y) subY(speed);
         
+        if( Math.abs(tx - x) < speed ) x = tx;
+        if( Math.abs(ty - y) < speed ) y = ty;
+        
         doLifeBar();
-        
-        pb.rc = 255;
-        pb.gc = 255;
-        pb.bc = 0;
-        
-        pb.roc = 255;
-        pb.goc = 0;
-        pb.boc = 0;
-        
-        pb.x= x - 10;
-        pb.y= y + 20;
-        pb.width=20;
-        pb.height=5;
-        pb.has=reload;
-        pb.outOf=reloadNeed;
-        pb.calcPercent();
 
         reload++;
         grenadeTime++;
         
-        if(reload>=100) reload = 100;
-        if(grenadeTime >= 1000) grenadeTime = 100;
+        if(reload>=1000) reload = 1000;
+        if(grenadeTime >= 1000) grenadeTime = 1000;
     }
 
     public void shoot() {
-        if(reload>=reloadNeed) {
+        if(reload>=5) {
             Projectile p = newProjectile();
             p.damage = 35;
-            p.setByDir(dir, 5);
+            p.setByDir(dir, 15);
             p.size = 1;
             level.add(p);
             reload = 0;
@@ -79,7 +66,5 @@ public class Soldier extends Mob
                 game.drawPixel(x+i, y+k, team.r, team.g, team.b);
             }
         }
-        
-        //pb.render(game);
     }
 }   

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
-public class Boss extends Mob
+public class SuperBoss extends Boss
 {
-    ArrayList<Cover> minions = new ArrayList<Cover>();
+    ArrayList<Boss> minions = new ArrayList<Boss>();
     double tx = 500;
     double ty = 500;
     
@@ -12,20 +12,17 @@ public class Boss extends Mob
     int explodeArea = 200;
     
     double rotation = 0;
-    double rotSpeed = 2.5;
-    
-    //double rotSpeed = 15;
-    
+    double rotSpeed = -1;
     
     boolean doAi = false;
     
-    public Boss() {
+    public SuperBoss() {
         maxHp = 200000;
         hp = maxHp;
         speed = 2;
         regen = 0;
-        size = 100;
-        spacing = size + 50;
+        size = 50;
+        spacing = 250;
     }
 
     public void die() {
@@ -33,7 +30,7 @@ public class Boss extends Mob
         for(int i=0; i<minions.size(); i++) {
             minions.get(i).die();
         }
-        level.add( new Explosion( this, x, y, 200, 0 ) );
+        level.add( new Explosion(this, x, y, 200, 0) );
     }
     
     public void hitInRange() {
@@ -47,8 +44,6 @@ public class Boss extends Mob
     }
 
     public void tick() {
-        damageTime = 0;
-        
         super.tick();
         
         hitInRange();
@@ -58,6 +53,15 @@ public class Boss extends Mob
         while(rotation >= 360) {
             rotation -= 360;
         }
+        
+        while(rotation < 0) {
+            rotation += 360;
+        }
+
+        bar.x = x - 20;
+        bar.y = y + 15;
+        bar.height = 10;
+        bar.width = 40;
         
         if(doAi && hp < maxHp / 2) {
             speed = 3;
@@ -122,10 +126,10 @@ public class Boss extends Mob
         if(attackTime < 0) attackTime = 0;
         if(attackTime > 10000) attackTime = 10000;
 
-        bar.x = x - 40;
+        bar.x = x - 20;
         bar.y = y + 15;
-        bar.height = 15;
-        bar.width = 80;
+        bar.height = 10;
+        bar.width = 40;
     }
 
     public void doMinions() {
@@ -134,35 +138,35 @@ public class Boss extends Mob
         }
 
         while(minions.size()<4) {
-            Cover t = new Cover();
+            Boss t = new Boss();
             t.team = this.team;
             t.x = x;
             t.y = y;
             t.speed = 50;
-            t.size = 50;
+            t.size = 100;
             level.add(t);
             minions.add(t);
         }
 
         double[] end = findPosByAngle(x, y, rotation, spacing);
         
-        minions.get(0).x = x + end[0];
-        minions.get(0).y = y + end[1];
+        minions.get(0).tx = x + end[0];
+        minions.get(0).ty = y + end[1];
         
         end = findPosByAngle(x, y, rotation + 90, spacing);
 
-        minions.get(1).x = x + end[0];
-        minions.get(1).y = y + end[1];
+        minions.get(1).tx = x + end[0];
+        minions.get(1).ty = y + end[1];
         
         end = findPosByAngle(x, y, rotation + 180, spacing);
 
-        minions.get(2).x = x + end[0];
-        minions.get(2).y = y + end[1];
+        minions.get(2).tx = x + end[0];
+        minions.get(2).ty = y + end[1];
         
         end = findPosByAngle(x, y, rotation + 270, spacing);
 
-        minions.get(3).x = x + end[0];
-        minions.get(3).y = y + end[1];
+        minions.get(3).tx = x + end[0];
+        minions.get(3).ty = y + end[1];
     }
 
     public void render() {
@@ -182,15 +186,10 @@ public class Boss extends Mob
 
         game.drawCircle(x, y, 255, 255, 255, size);
         
+        game.drawCircle(x, y, 255, 255, 255, spacing);
+        
         double[] end = findPosByAngle(x, y, rotation, 150);
         
         game.drawLine(x, y, x + end[0], y + end[1], 255, 0, 0, 100);
-        
-        ArrayList<Mob> entities = level.getInRange( x, y, size);
-
-        for(int i=0; i<entities.size(); i++) {
-            Mob m = entities.get(i);
-            if(!team.equals(m.team)) game.drawLine(x, y, m.x, m.y, 255, 255, 255);
-        }
     }
 }

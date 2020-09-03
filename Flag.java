@@ -3,6 +3,8 @@ public class Flag extends Entity
 {    
     int radius = 50;
     int capturePoints = 0;
+    int captureNeed = 1000;
+    
     PixelBar bar = new PixelBar();
     boolean captured = false;
     
@@ -28,16 +30,19 @@ public class Flag extends Entity
         bar.x = x - (bar.width / 2);
         bar.y = y + 25;
         bar.has = capturePoints;
-        bar.outOf=500;
+        bar.outOf = captureNeed;
         bar.calcPercent();
         
-        if(capturePoints>=500) {
-            //capturePoints = 0;
+        if(capturePoints >= captureNeed) {
+            capturePoints = captureNeed;
             captured = true;
         }
+        
+        if(capturePoints < 0) capturePoints = 0;
     }
     
     public void render() {
+        if(!visible) return;
         /**
         game.drawPixel(x-radius, y, team.r, team.g, team.b);
         game.drawPixel(x+radius, y, team.r, team.g, team.b);

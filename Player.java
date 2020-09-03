@@ -1,49 +1,30 @@
 public class Player extends Mob
 {
-    int reloadBig = 0;
-    int reloadSmall = 0;
-    int reloadShotgun = 0;
+    //int reloadBig = 0;
+    //int reloadSmall = 0;
+    //int reloadShotgun = 0;
     int kills = 0;
-    int energy = 0;
-    int maxEnergy = 1000;
     
-    double maxShield = 1000;
-    double shield = 1000;
+    double dx = 0;
+    double dy = 0;
 
-    public Player() {
+    InputListener input;
+
+    public Player(InputListener in) {
+        input = in;
+
         maxHp = 2000;
         hp = maxHp;
         regen = 1;
         team = new Team();
         speed = 2;
-        size = 30;
-        shield = maxShield;
+        size = 15;
         y = 500;
-    }
-    
-    public void damage(double a, Projectile p, Mob m) {
-        super.damage(a, p, m);
-    }
-    
-    public void damage(double a, Mob m) {
-        super.damage(a, m);
-        
-        //m.damage(a, this); //Some kind of thorns effect
-    }
-
-    public void damage(double a) {
-        shield -= a;
-        if(shield<0) {
-            //hp+=shield;
-            shield=0;
-        }
-        damageTime = 400;
     }
 
     public void revive() {
         isAlive=true;
         hp=maxHp;
-        shield = maxShield;
     }
 
     public void killed(Mob m) {
@@ -51,18 +32,39 @@ public class Player extends Mob
     }
 
     public void render() {
-        //game.drawPixel(x, y, 0, 0, 255);
         for(int i=-3; i<4; i++) {
             for(int k=-3; k<4; k++) {
                 game.drawPixel(x+i, y+k, 0, 0, 255);
             }
         }
-        
+
         game.drawCircle(x, y, 255, 255, 255, size);
+    }
+    
+    public void doMovementControls() {
+        if(input.down.down) addY( speed );
+        if(input.up.down) subY( speed );
+        if(input.left.down) subX( speed );
+        if(input.right.down) addX( speed );
     }
 
     public void tick() {
         super.tick();
+
+        doMovementControls();
+        
+        bar.x=x-20;
+        bar.y=y+15;
+        bar.width=40;
+        bar.height=10;
+        
+        dx = x;
+        dy = y;
+        
+        /**
+        if(input.space.down) shootSmall();
+        if(input.l.down) shootBig();
+        if(input.k.down) shootShotgun();
 
         regen = maxHp/500;
 
@@ -82,61 +84,6 @@ public class Player extends Mob
         reloadShotgun++;   
         if(reloadSmall>100) reloadSmall=100;
         if(reloadShotgun>100) reloadShotgun=100;
+        */
     }
-
-    public void shootShotgun() {
-        if(reloadShotgun>=100) {
-            reloadSmall=5;
-            for(int i=0; i<20; i++) {
-                Projectile p = newProjectile();
-                p.velocX=10;
-                p.damage=20;
-                p.setOffset(30);
-                p.damageRange = 20;
-                p.size = 1;
-                shoot(p);
-                reloadSmall=5;
-            }
-            reloadShotgun=0;
-            reloadSmall=0;
-        }
-    }
-
-    public void shootSmall() {
-        if(reloadSmall>=5) {
-            for(int i=0; i<1; i++) {
-                Projectile p = newProjectile();
-                /*
-                Bomb p = new Bomb(this);
-                p.x = x;
-                p.y = y;
-                */
-                //p.velocX=10;
-                p.setByDir(1, 10);
-                p.damage=40;
-                p.setOffset(15);
-                p.damageRange = 15;
-                p.size = 2;
-                shoot(p);
-                reloadSmall=0;
-            }
-        }
-    }
-
-    public void shootBig() {
-        if(reloadBig>=100) {
-            Bomb b = new Bomb(this);
-            b.x=x;
-            b.y=y;
-            b.velocX=3;
-            b.damage=20;
-            b.setOffset(20);
-            b.maxTime=100;
-            b.eRadius=200;
-            b.size = 5;
-            shoot(b);
-            reloadBig=0;
-        }
-    }
-
 }

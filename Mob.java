@@ -11,6 +11,81 @@ public class Mob extends Entity
     double speed = 1;
     PixelBar bar = new PixelBar();
     boolean isAlive=true;
+    
+    public double[] findPosByAngle(double x1, double y1, double r, double d) {
+        double[] toRet = new double[2];
+        
+        while(r >= 360) {
+            r-=360;
+        }
+        
+        while(r < 0) {
+            r+=360;
+        }
+        
+        if(r % 90 == 0) {
+            
+            if(r==90) {
+                toRet[0] = d;
+                toRet[1] = 0;
+                return toRet;
+            }
+            
+            if(r==180) {
+                toRet[0] = 0;
+                toRet[1] = d;
+                return toRet;
+            }
+            
+            if(r==270) {
+                toRet[0] = d * -1;
+                toRet[1] = 0;
+                return toRet;
+            }
+            
+            if(r==360) {
+                toRet[0] = 0;
+                toRet[1] = d * -1;
+                return toRet;
+            }
+            
+        }
+        
+        int c = 0;
+        while(r >= 90 ) {
+            r-=90;
+            c++;
+        }
+        
+        if(c==1 || c==3) r= 90 - r;
+        
+        double x2 = d * Math.sin( Math.toRadians(r) );
+        double y2 = d * Math.cos( Math.toRadians(r) );
+        
+        if(c==0) {
+            y2*=-1;
+        }
+        
+        if(c==1) {
+            //y2*=-1;
+            
+        }
+        
+        if(c==2) {
+            //y2*=-1;
+            x2*=-1;
+        }
+        
+        if(c==3) {
+            x2*=-1;
+            y2*=-1;
+        }
+        
+        toRet[0] = x2;
+        toRet[1] = y2;
+        
+        return toRet;
+    }
 
     public void addX(double a) {
         x+=a;
