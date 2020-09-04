@@ -8,6 +8,8 @@ Basis for the PixelEngine.
 
 ### 9/2/2020
 
+Uploaded the most recent version of the game.
+
 This is a game written by me (RootCellar) in about 2018. The game was essentially a concept to learn how to draw simple, pixelated graphics to the screen in java, and make a fully functioning game.
 
 The game is not actually finished though. I added a boss and flags that were intended to be capturable, but nothing actually happens when either the boss is killed or the flag is captured. The boss simply respawns, and you keep fighting.
@@ -34,6 +36,7 @@ This game was made starting in early 2018, just as a concept. I worked on it ove
 
 Late 2018 (October or so), the game was extracted to start the PixelEngine. It has since then been abandoned.
 
+(so abandoned that the most recent code wasn't even on github!)
 
 
 
