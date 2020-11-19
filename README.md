@@ -4,6 +4,8 @@
 
 Basis for the PixelEngine.
 
+An original copy of the game, before any modifications, can be found here (github) in the "original" branch.
+
 ## Timeline of sorts
 
 ### 9/2/2020
