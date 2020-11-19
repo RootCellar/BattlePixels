@@ -1,19 +1,19 @@
 public class RampagePlayer extends Player {
-    
+
     int reloadGun = 0;
-    
+
     public RampagePlayer(InputListener in) {
         super(in);
-        
-        maxHp = 2000;
+
+        maxHp = 1000;
         hp = maxHp;
-        regen = maxHp / 1600;
+        regen = maxHp / 500;
         team = new Team();
-        speed = 3;
+        speed = 4;
         size = 0;
         y = 500;
     }
-    
+
     public void damage(double a, Projectile p, Mob m) {
         super.damage(a, p, m);
     }
@@ -26,7 +26,7 @@ public class RampagePlayer extends Player {
         hp-=a;
         damageTime = 0;
     }
-    
+
     public void shootGun() {
         if(reloadGun>=10) {
             for(int i=0; i<10; i++) {
@@ -47,18 +47,18 @@ public class RampagePlayer extends Player {
             }
         }
     }
-    
+
     public void tick() {
         super.tick();
-        
+
         if(input.space.down) shootGun();
-        
+
         reloadGun++;
         if(reloadGun > 1000) reloadGun = 1000;
-        
+
         if(reloadGun < 0) reloadGun = 0;
     }
-    
+
     public void render() {
         //game.drawPixel(x, y, 0, 0, 255);
         for(int i=-3; i<4; i++) {
@@ -68,7 +68,7 @@ public class RampagePlayer extends Player {
         }
 
         //game.drawCircle(x, y, 255, 255, 255, size);
-        
+
         //shieldBar.render(game);
     }
 }

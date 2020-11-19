@@ -1,24 +1,24 @@
 public class TankPlayer extends Player {
-    
+
     double maxShield = 4000;
     double shield = maxShield;
-    
+
     PixelBar shieldBar = new PixelBar();
-    
+
     int reloadGun = 0;
-    
+
     public TankPlayer(InputListener in) {
         super(in);
-        
-        maxHp = 10000;
+
+        maxHp = 5000;
         hp = maxHp;
         regen = maxHp / 300;
         team = new Team();
-        speed = 1;
+        speed = 1.5;
         size = 30;
         y = 500;
     }
-    
+
     public void damage(double a, Projectile p, Mob m) {
         super.damage(a, p, m);
     }
@@ -34,10 +34,10 @@ public class TankPlayer extends Player {
         if(shield<0) {
             hp+=shield;
             shield=0;
+            damageTime = 400;
         }
-        damageTime = 400;
     }
-    
+
     public void shootGun() {
         if(reloadGun>=1) {
             for(int i=0; i<1; i++) {
@@ -58,12 +58,12 @@ public class TankPlayer extends Player {
             }
         }
     }
-    
+
     public void tick() {
         super.tick();
-        
+
         if(input.space.down) shootGun();
-        
+
         shieldBar.x = x - 20;
         shieldBar.y = y + 30;
         shieldBar.width = 40;
@@ -73,17 +73,17 @@ public class TankPlayer extends Player {
         shieldBar.has = shield;
         shieldBar.outOf = maxShield;
         shieldBar.calcPercent();
-        
-        shield += (maxShield / 400);
+
+        shield += (maxShield / 600);
         if(shield >= maxShield) shield = maxShield;
         if(shield < 0) shield = 0;
-        
+
         reloadGun++;
         if(reloadGun > 1000) reloadGun = 1000;
-        
+
         if(reloadGun < 0) reloadGun = 0;
     }
-    
+
     public void render() {
         //game.drawPixel(x, y, 0, 0, 255);
         for(int i=-3; i<4; i++) {
@@ -93,7 +93,7 @@ public class TankPlayer extends Player {
         }
 
         game.drawCircle(x, y, 255, 255, 255, size);
-        
+
         shieldBar.render(game);
     }
 }
