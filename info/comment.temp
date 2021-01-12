@@ -1,0 +1,108 @@
+Mob.java:70:            //y2*=-1;
+Mob.java:75:            //y2*=-1;
+Mob.java:154:        //checkHp();
+Level.java:37:        //entities.remove(e);
+Level.java:43:        //projectiles.remove(p);
+Level.java:148:        //entities.add(e);
+SummonerPlayer.java:57:                //p.velocX=10;
+SummonerPlayer.java:134:        //game.drawPixel(x, y, 0, 0, 255);
+SummonerPlayer.java:147:        //shieldBar.render(game);
+ChargerPlayer.java:64:        //game.drawPixel(x, y, 0, 0, 255);
+ChargerPlayer.java:71:        //game.drawCircle(x, y, 255, 255, 255, size);
+ChargerPlayer.java:73:        //shieldBar.render(game);
+Game.java:26:    public Level[] levels = new Level[1]; // Multi-Level Support
+Game.java:38:    boolean MULTI_RENDERING = false; //Set to true to enable multi-threaded rendering. WIP, causes jittering
+Game.java:56:    //public Mob[] mobs = new Mob[10000];
+Game.java:57:    //public ArrayList<Mob> mobs = new ArrayList<Mob>();
+Game.java:62:        //screen.user = m;
+Game.java:67:        //screen.user = this;
+Game.java:85:        //new Thread(this).start();
+Game.java:88:        //screen.setSize(800);
+Game.java:95:            //screen.setVisible(true);
+Game.java:101:        //screen.setVisible(false);
+Game.java:118:        //level.add( new Flag( 800, 500, 200, level.teams.get(1) ) );
+Game.java:152:        //setup();
+Game.java:178:                //render();
+Game.java:180:                ///*
+Game.java:194:                    //lastFrame = System.nanoTime();
+Game.java:196:                //*/
+Game.java:220:        //g.drawString("HI",(int)(Math.random()*400), (int)(Math.random()*400)); //TEST
+Game.java:229:            //g.drawString("E+P: "+(level.entities.size()+level.projectiles.size()), 10, 50);
+Game.java:244:            //g.drawString("RAM: "+ram.percentUsed+"%", 100, 60);
+Game.java:248:            //LEVEL DATA
+Game.java:287:        //screen.setPixel(xd,yd,255,255,255);
+Game.java:288:        //screen.setPixel(xd+1,yd,255,255,255);
+Game.java:289:        //screen.setPixel(xd,yd+1,255,255,255);
+Game.java:290:        //screen.setPixel(xd+1,yd+1,255,255,255);
+Game.java:292:        //ai();
+Game.java:300:        for(int i=0; i<level.xBound; i++) { //Top Border
+Game.java:304:        for(int i=0; i<level.xBound; i++) { //Bottom Border
+Game.java:308:        for(int i=0; i<level.yBound; i++) { //Left Border
+Game.java:312:        for(int i=0; i<level.yBound; i++) { //Right Border
+Game.java:322:        //bar.percent = ((p.hp*100)/p.maxHp);
+Game.java:377:        //if(!screen.hasFocus()) paused = true;
+Game.java:415:        ///**
+Game.java:416:        //if(input.c.wasDown()) takeScreenshot();
+Game.java:418:        //if(input.u.wasDown() && renderDistance>=1000) renderDistance -= 50;
+Game.java:419:        //if(input.i.wasDown() && renderDistance<=2000) renderDistance += 50;
+Game.java:424:        //*/
+Game.java:436:        //level.tick();
+Game.java:484:        //screen.setPixel((x-xo)+xd, (y-yo)+yd, r, g, b);
+Game.java:485:        //if( Level.getDistance(xo, yo, x, y) < renderDistance) screen.setPixel((x-xo)+xd, (y-yo)+yd, r, g, b);
+Game.java:489:        //Regular Render
+Game.java:490:        //screen.setPixel(( x -  ( xo ) ) + xd, ( y - ( yo ) ) + yd, r, g, b);
+Game.java:502:        //TEST RENDER
+Game.java:503:        //screen.setPixel(( (y) - yo)+xd, ( (x * -1) - xo)+yd, r, g, b);
+Game.java:504:        //if( Level.getDistance(xo, yo, x, y) < renderDistance) screen.setPixel((x-xo)+xd, (y-yo)+yd, r, g, b);
+Game.java:538:        //boolean backwards = x1 > x2;
+Game.java:547:        //if(y1!=y2) slope =(double)Math.abs(x1-x2) / (double)Math.abs(y1-y2);
+PixelCanvas.java:79:        //fps = Math.random();
+PixelCanvas.java:84:        //g.drawString("PFPS: "+Pfps,10,10);
+PixelCanvas.java:109:        //g.fillRect(0,0,getWidth(),getHeight());
+PixelCanvas.java:156:    //Test Method, possibly faster
+PixelCanvas.java:157:    ///*
+PixelCanvas.java:159:        //int r2=r<<16;
+PixelCanvas.java:160:        //int g2=g<<8;
+PixelCanvas.java:161:        //int b2=b;
+PixelCanvas.java:169:    //*/
+PixelCanvas.java:190:                //pixels[x+y*WIDTH]=0;
+PixelCanvas.java:201:        //frame.setResizable(false);
+PixelCanvas.java:217:                //Thread.sleep(1000 / 10);
+Soldier.java:83:        //pb.render(game);
+OptionMenu.java:47:            //if(choice == 0) game.clearMenu();
+OptionMenu.java:48:            //if(choice == 0) game.setMenu( new ClassMenu() );
+OptionMenu.java:49:            //if(choice == 1) game.setMenu( new HelpMenu( this ) );
+StartMenu.java:19:            //if(choice == 0) game.clearMenu();
+Projectile.java:36:        //if(team==null || target.team==null) target.damage( damage, this, shooter);
+Projectile.java:75:        //game.drawPixel(x, y, 0, 255, 0);
+Player.java:3:    //int reloadBig = 0;
+Player.java:4:    //int reloadSmall = 0;
+Player.java:5:    //int reloadShotgun = 0;
+Boss.java:17:    //double rotSpeed = 15;
+PauseMenu.java:53:            //if(choice == 2) game.setMenu( new AboutMenu() );
+AllyTeam.java:28:       //flag.visible = false;
+AllyTeam.java:69:            //s.grenade();
+Terminal.java:44:            //System.out.println(key);
+Terminal.java:46:                //Client.send(input.getText());
+Terminal.java:55:            //e.printStackTrace();
+Cover.java:9:        //hp-=a;
+Cover.java:11:        //checkHp();
+ClassMenu.java:131:            //g.drawString("K to use the best drone mode ever!", 180, 205);
+ClassMenu.java:132:            //g.drawString("L to shoot the drone's gun", 180, 220);
+TankPlayer.java:29:        //m.damage(a, this); //Some kind of thorns effect
+TankPlayer.java:50:                //p.velocX=10;
+TankPlayer.java:88:        //game.drawPixel(x, y, 0, 0, 255);
+PixelBar.java:24:                //if(i>howMuch2) g.drawPixel(x+i, y+k, 255-rc, 255-gc, 255-bc);
+EnemySoldier.java:12:        //if(xt==0) xt=-1;
+EnemySoldier.java:13:        //if(yt==0) yt=-1;
+EnemySoldier.java:30:        //regen();
+EnemySoldier.java:31:        //checkHp();
+Flag.java:25:            //capturePoints++;
+Renderer.java:47:                    //lastFrame = System.nanoTime();
+RampagePlayer.java:39:                //p.velocX=10;
+RampagePlayer.java:63:        //game.drawPixel(x, y, 0, 0, 255);
+RampagePlayer.java:70:        //game.drawCircle(x, y, 255, 255, 255, size);
+RampagePlayer.java:72:        //shieldBar.render(game);
+Explosion.java:37:            //Strait lines from center
+Explosion.java:43:            //Diagonal Lines
+InputListener.java:62:        //System.out.println(ke);
