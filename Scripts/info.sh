@@ -4,6 +4,7 @@
 echo
 echo COLLECTING INFO...
 
+mkdir ../info
 git status
 git log > ../info/gitlog.temp
 
